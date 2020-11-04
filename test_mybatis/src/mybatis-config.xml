@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <properties resource="db.properties"/>
+
+    <!--为mapper映射文件中的domain起别名-->
+    <typeAliases>
+        <!--方式1. 为指定的类分别起别名 别名的命名由自己决定 type:要为那个domain起别名  alias：别名的名字-->
+       <!-- <typeAlias type="com.xiaoyu.domain.Student" alias="stu"/>-->
+
+        <!--方式2. 使用package标签批量起别名，命名不是有我们自居决定的，别名为类名，不区分大小写
+            name：指定一个包结构，所有domain包下的类自定起好别名-->
+        <package name="com.xiaoyu.domain"/>
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--mapper映射文件的注册中心-->
+    <mappers>
+        <!--方式1.使用Resource属性指定mapper映射文件-->
+       <!-- <mapper resource="com\xiaoyu\dao\StudentDao.xml"/>-->
+
+        <!--方式2.使用class属性，找到dao层接口的全路径，【同过接口能代表映射文件】-->
+        <!--<mapper class="com.xiaoyu.dao.StudentDao"/>-->
+
+        <!--方式3. 批量注册  name属性：指向dao层的包，表示在该dao包下，所有的mapper映射文件自动注册
+            总结： 未来项目开发中一定使用批量注册mapper映射文件-->
+        <package name="com.xiaoyu.dao"/>
+    </mappers>
+</configuration>
+
+<!--总结 mybatis主配置文件都能干嘛：
+        1.properties标签  指向项目中properties资源，当我们同过properties标签加载properties资源之后
+          在下边配置<environment>这个环境的时候，就可以同过表达式语言${}的形式，就可以以key的形式取得value值
+          取得 驱动、连接、账号、密码
+        2.起别名 使用批量起别名的形式【类名 或者类名首字母小写】 或者不用起别名的形式，用全限定名称
+        3.<mappers>  使用package形式批量注册
+-->
